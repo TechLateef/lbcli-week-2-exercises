@@ -5,4 +5,4 @@ newaddress=$(bitcoin-cli getnewaddress p2sh-segwit)
 
 bitcoin-cli -regtest generatetoaddress 101 $newaddress > /dev/null
 
-echo $newaddress
+echo -n "$newaddress"
