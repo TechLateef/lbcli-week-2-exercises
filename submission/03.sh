@@ -3,6 +3,6 @@
 # Return only the Address
 newaddress=$(bitcoin-cli getnewaddress p2sh-segwit)
 
-bitcoin-cli generatetoaddress 101 $newaddress
+bitcoin-cli -regtest generatetoaddress 101 $newaddress > /dev/null
 
 echo $newaddress
