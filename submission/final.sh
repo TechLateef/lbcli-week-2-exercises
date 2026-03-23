@@ -353,7 +353,7 @@ echo "- Sends funds to: bcrt1qxhy8dnae50nwkg6xfmjtedgs6augk5edj2tm3e"
 echo ""
 
 # Decode the secondary transaction (SECONDARY_TX) to get its TXID
-SECONDARY_TXID=$(bitcoin-cli -regtest decoderawtransaction | jq -r '.txid')
+SECONDARY_TXID=$(bitcoin-cli -regtest decoderawtransaction $SECONDARY_TX | jq -r '.txid')
 check_cmd "Secondary TXID extraction" "SECONDARY_TXID" "$SECONDARY_TXID"
 echo "Secondary transaction ID: $SECONDARY_TXID"
 
@@ -376,7 +376,7 @@ TIMELOCK_AMOUNT=$((SECONDARY_SATS - TIMELOCK_FEE))
 check_cmd "Timelock amount calculation" "TIMELOCK_AMOUNT" "$TIMELOCK_AMOUNT"
 
 # Convert to BTC
-TIMELOCK_BTC=$(echo "scale=8; $TIMELOCK_AMOUNT / 100000000" | bc -l | sed 's/^./0./')
+TIMELOCK_BTC=$(printf "%.8f" $(echo "scale=8; $TIMELOCK_AMOUNT / 100000000" | bc -l ))
 
 # STUDENT TASK: Create the outputs JSON structure
 TIMELOCK_OUTPUTS="{"$TIMELOCK_ADDRESS": $"TIMELOCK_BTC"}"
