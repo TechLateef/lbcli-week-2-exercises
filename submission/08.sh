@@ -5,4 +5,6 @@ raw_tx="01000000000101c8b0928edebbec5e698d5f86d0474595d9f6a5b2e4e3772cd9d1005f23
 recipient=2MvLcssW49n9atmksjwg2ZCMsEMsoj3pzUP
 change_addr=$(bitcoin-cli -regtest getnewaddress)
 txid=$(bitcoin-cli -regtest decoderawtransaction $raw_tx | jq -r '.txid')
-bitcoin-cli -regtest createrawtransaction "[{\"txid\": \"$txid\", \"vout\":0},{\"txid\": \"$txid\", \"vout\":1}]" "{\"$recipient\": 0.2, \"$change_addr\": 0.03659108}"
+total=$(bitcoin-cli -regtest decoderawtransaction $raw_tx | jq -r '[.vout[].value] | add')
+send_amount=$(printf "%.8f" $(echo "$total - 0.0002" | bc -l))
+bitcoin-cli -regtest createrawtransaction "[{\"txid\": \"$txid\", \"vout\":0},{\"txid\": \"$txid\", \"vout\":1}]" "{\"$recipient\": $send_amount}"
